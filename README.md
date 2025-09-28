@@ -51,7 +51,7 @@ This project uses the **AWS Serverless Application Model (SAM)** to make setup a
 ### 2. Setup and Configuration
 1.  **Clone the repository:**
     ```bash
-    git clone [<your-repo-url>](https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git)
+    git clone (https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git)
     cd aircraft_fuel_optimizer
     ```
 2.  **Configure the Ingestion Lambda:** Create a `.env` file inside the `ingestion_lambda` folder with your CheckWX API key:
