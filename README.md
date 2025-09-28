@@ -50,7 +50,7 @@ This project uses the **AWS Serverless Application Model (SAM)** to make setup a
 ### 2. Setup and Configuration
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git](https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git)
+    git clone https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git
     cd aircraft_fuel_optimizer
     pip install requirements.txt
     ```
