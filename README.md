@@ -36,7 +36,7 @@ Here is the final recommendation message in the AWS SQS queue:
 <img width="1870" height="918" alt="image" src="https://github.com/user-attachments/assets/2718491f-5394-488f-bf16-12727b3fdecb" />
 
 
-## How to Run
+## How to Run (Recommended: AWS SAM)
 
 This project uses the **AWS Serverless Application Model (SAM)** to make setup and deployment easy. The following steps will create all the necessary AWS resources for you.
 
@@ -50,8 +50,9 @@ This project uses the **AWS Serverless Application Model (SAM)** to make setup a
 ### 2. Setup and Configuration
 1.  **Clone the repository:**
     ```bash
-    git clone (https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git)
+    git clone [https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git](https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git)
     cd aircraft_fuel_optimizer
+    pip install requirements.txt
     ```
 2.  **Configure the Ingestion Lambda:** Create a `.env` file inside the `ingestion_lambda` folder with your CheckWX API key:
     ```
@@ -93,8 +94,96 @@ This project uses the **AWS Serverless Application Model (SAM)** to make setup a
       "flight_id": "FL123"
     }
     ```
+---
 
-You can now watch the workflow execute visually and check the SQS queue for the final message.
+## Alternative: Manual Deployment via AWS Console
+
+The following steps detail how to deploy all resources manually using the AWS Management Console.
+
+### Step 1: Prepare Lambda Packages
+First, prepare the `.zip` files for each Lambda function locally.
+
+1.  **Install dependencies into each folder:**
+    ```bash
+    # For the ingestion lambda
+    pip install pandas requests python-dotenv -t ingestion_lambda/
+
+    # For the optimization lambda (no external dependencies needed)
+
+    # For the reporting lambda
+    pip install python-dotenv -t reporting_lambda/
+    ```
+2.  **Create the zip files:**
+    ```bash
+    # Zip the ingestion package
+    cd ingestion_lambda && zip -r ../ingestion_lambda.zip . && cd ..
+
+    # Zip the optimization package
+    cd optimization_lambda && zip -r ../optimization_lambda.zip . && cd ..
+
+    # Zip the reporting package
+    cd reporting_lambda && zip -r ../reporting_lambda.zip . && cd ..
+    ```
+
+### Step 2: Create AWS Resources
+1.  **Create IAM Role:**
+    * Go to the **IAM Console**, navigate to **Roles**, and click **Create role**.
+    * Select **AWS service** as the trusted entity and **Lambda** as the use case.
+    * Attach the `AWSLambdaBasicExecutionRole` and `AmazonSQSFullAccess` policies.
+    * Name the role (e.g., `FuelOptimizerLambdaRole`) and create it.
+
+2.  **Create SQS Queue:**
+    * Go to the **SQS Console**, click **Create queue**.
+    * Keep the **Standard** type, give it a name (e.g., `FuelOptimizationRecommendations`), and create it.
+    * Copy the **Queue URL** for a later step.
+
+3.  **Create Lambda Functions:**
+    * Go to the **Lambda Console** and create three separate functions (`ingestion-lambda`, `optimization-lambda`, `reporting-lambda`).
+    * For each function:
+        * Choose **Author from scratch**, select the **Python 3.9** runtime.
+        * Under Permissions, choose **Use an existing role** and select the `FuelOptimizerLambdaRole` you created.
+        * After creating the function, upload the corresponding `.zip` package.
+        * For the `reporting-lambda`, go to **Configuration > Environment variables** and add a variable with the **Key** `SQS_QUEUE_URL` and the **Value** as the queue URL you copied.
+        * **Copy the ARN** of each function after it's created.
+
+### Step 3: Create the Step Functions State Machine
+1.  Go to the **Step Functions Console** and click **Create state machine**.
+2.  Choose **Write your workflow in code**.
+3.  Paste the following JSON definition, replacing the placeholder ARNs with the actual ARNs of your Lambda functions:
+    ```json
+    {
+      "Comment": "State machine to orchestrate the Airline Fuel Optimization workflow.",
+      "StartAt": "IngestFlightData",
+      "States": {
+        "IngestFlightData": {
+          "Type": "Task",
+          "Resource": "PASTE_YOUR_INGESTION_LAMBDA_ARN_HERE",
+          "Next": "OptimizeFuel"
+        },
+        "OptimizeFuel": {
+          "Type": "Task",
+          "Resource": "PASTE_YOUR_OPTIMIZATION_LAMBDA_ARN_HERE",
+          "Next": "DistributeReport"
+        },
+        "DistributeReport": {
+          "Type": "Task",
+          "Resource": "PASTE_YOUR_REPORTING_LAMBDA_ARN_HERE",
+          "End": true
+        }
+      }
+    }
+    ```
+4.  Give the state machine a name and create it.
+
+### Step 4: Run the Workflow
+1.  Go to your newly created state machine and click **Start execution**.
+2.  Provide the input JSON:
+    ```json
+    {
+      "flight_id": "FL123"
+    }
+    ```
+3.  Click **Start execution** and observe the visual workflow.
 
 ## Fulfilling the Assignment Requirements
 
