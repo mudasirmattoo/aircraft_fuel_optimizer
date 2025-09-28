@@ -1,0 +1,21 @@
+{
+  "Comment": "State machine to orchestrate the Airline Fuel Optimization workflow.",
+  "StartAt": "IngestFlightData",
+  "States": {
+    "IngestFlightData": {
+      "Type": "Task",
+      "Resource": "${IngestionLambdaArn}",
+      "Next": "OptimizeFuel"
+    },
+    "OptimizeFuel": {
+      "Type": "Task",
+      "Resource": "${OptimizationLambdaArn}",
+      "Next": "DistributeReport"
+    },
+    "DistributeReport": {
+      "Type": "Task",
+      "Resource": "${ReportingLambdaArn}",
+      "End": true
+    }
+  }
+}
