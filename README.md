@@ -37,31 +37,65 @@ Here is the final recommendation message in the AWS SQS queue:
 <img width="1870" height="918" alt="image" src="https://github.com/user-attachments/assets/2718491f-5394-488f-bf16-12727b3fdecb" />
 
 
-
 ## How to Run
 
-The easiest way to run the project is with Docker.
+This project uses the **AWS Serverless Application Model (SAM)** to make setup and deployment easy. The following steps will create all the necessary AWS resources for you.
 
 ### 1. Prerequisites
+* **Git**
+* **Python 3.9+**
+* **Docker** (must be running for SAM to build the packages)
+* **AWS CLI** with credentials configured (run `aws configure`)
+* **AWS SAM CLI** installed ([see installation guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html))
 
-* AWS credentials configured on your local machine (e.g., via `aws configure`).
+### 2. Setup and Configuration
+1.  **Clone the repository:**
+    ```bash
+    git clone [<your-repo-url>](https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git)
+    cd aircraft_fuel_optimizer
+    ```
+2.  **Configure the Ingestion Lambda:** Create a `.env` file inside the `ingestion_lambda` folder with your CheckWX API key:
+    ```
+    # ingestion_lambda/.env
+    CHECKWX_API_KEY=YOUR_API_KEY_HERE
+    ```
+3.  **Configure the Reporting Lambda:** Create a `.env` file inside the `reporting_lambda` folder. The SQS Queue will be created by SAM, so we'll add the URL after the first deployment. For now, create the file with a placeholder:
+    ```
+    # reporting_lambda/.env
+    SQS_QUEUE_URL=placeholder
+    ```
 
-### 2. Configuration
-The project uses `.env` files for configuration.
-* Create a `.env` file inside the `ingestion_lambda` folder with your CheckWX API key:
-  ```
-  # ingestion_lambda/.env
-  CHECKWX_API_KEY=YOUR_API_KEY_HERE
-  ```
-* Create a `.env` file inside the `reporting_lambda` folder with your SQS queue URL:
-  ```
-  # reporting_lambda/.env
-  SQS_QUEUE_URL=YOUR_SQS_URL_HERE
-  ```
+### 3. Build and Deploy
+1.  **Build the application:** This command packages your Lambda functions with their dependencies.
+    ```bash
+    sam build
+    ```
+2.  **Deploy to AWS:** This command deploys all the resources defined in `template.yaml` to your AWS account. The `--guided` flag will prompt you for configuration the first time you run it.
+    ```bash
+    sam deploy --guided
+    ```
+    * **Stack Name:** Give it a name like `fuel-optimization-agent`.
+    * **AWS Region:** Enter your preferred region (e.g., `ap-south-1`).
+    * Accept the defaults for the remaining prompts.
 
-### 3. Build & Run
-You will need to build and run the project (instructions to be added here based on final deployment).
+### 4. Final Configuration
+1.  After deployment, go to the **AWS CloudFormation** console, find your stack (`fuel-optimization-agent`), and go to the **Outputs** tab.
+2.  Copy the `Value` for the `RecommendationsQueueUrl`.
+3.  Update your `reporting_lambda/.env` file with this real URL.
+4.  Run `sam build` and `sam deploy` one more time to update the Lambda with the correct queue URL.
 
+### 5. Run the Workflow
+1.  Go to the **AWS Step Functions** console.
+2.  Find and click on the state machine named `FuelOptimizationStateMachine-...`.
+3.  Click **Start execution**.
+4.  In the input dialog, paste the following JSON and then click **Start execution** again:
+    ```json
+    {
+      "flight_id": "FL123"
+    }
+    ```
+
+You can now watch the workflow execute visually and check the SQS queue for the final message.
 
 ## Fulfilling the Assignment Requirements
 
