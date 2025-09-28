@@ -28,11 +28,14 @@ The project is an event-driven workflow orchestrated by AWS Step Functions.
 
 Here is a screenshot of a successful workflow execution in AWS Step Functions:
 
-**(PASTE YOUR STEP FUNCTIONS SCREENSHOT HERE)**
+<img width="1848" height="880" alt="image" src="https://github.com/user-attachments/assets/1930d4ab-cb4f-47b8-88f3-3aca1a0bec37" />
+
+<img width="1837" height="693" alt="image" src="https://github.com/user-attachments/assets/9de1a4d7-47a4-498c-891c-4df2f3cc7010" />
 
 Here is the final recommendation message in the AWS SQS queue:
 
-**(PASTE YOUR SQS MESSAGE SCREENSHOT HERE)**
+<img width="1870" height="918" alt="image" src="https://github.com/user-attachments/assets/2718491f-5394-488f-bf16-12727b3fdecb" />
+
 
 
 ## How to Run
@@ -40,7 +43,7 @@ Here is the final recommendation message in the AWS SQS queue:
 The easiest way to run the project is with Docker.
 
 ### 1. Prerequisites
-* Docker installed and running.
+
 * AWS credentials configured on your local machine (e.g., via `aws configure`).
 
 ### 2. Configuration
