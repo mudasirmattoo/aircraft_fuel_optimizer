@@ -1,4 +1,3 @@
-# aircraft_fuel_optimizer
 # Airline Fuel Optimization Agent
 
 I built this project as a proof-of-concept for a coding challenge. It's an agent that analyzes a flight plan, fetches live weather data, and suggests altitude changes to save fuel. The entire workflow is automated and runs on AWS.
