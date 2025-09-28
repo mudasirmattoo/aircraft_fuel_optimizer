@@ -1,0 +1,84 @@
+# template.yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Deploys the Airline Fuel Optimization Agent application, including Lambda functions,
+  an SQS queue, and a Step Functions state machine.
+
+Resources:
+  # IAM Role that allows Lambdas to run, log, and send to SQS
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: SQSSendMessagePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: sqs:SendMessage
+                Resource: !GetAtt RecommendationsQueue.Arn
+
+  # The SQS Queue for receiving recommendations
+  RecommendationsQueue:
+    Type: AWS::SQS::Queue
+
+  # Ingestion Lambda Function
+  IngestionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ingestion_lambda/
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.9
+      Timeout: 30
+      Role: !GetAtt LambdaExecutionRole.Arn
+    Metadata:
+      BuildMethod: python3.9 # This tells SAM to build dependencies
+
+  # Optimization Lambda Function
+  OptimizationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: optimization_lambda/
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.9
+      Timeout: 15
+      Role: !GetAtt LambdaExecutionRole.Arn
+
+  # Reporting Lambda Function
+  ReportingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: reporting_lambda/
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.9
+      Timeout: 15
+      Role: !GetAtt LambdaExecutionRole.Arn
+    Metadata:
+      BuildMethod: python3.9 # This tells SAM to build dependencies
+
+  # The Step Functions State Machine (the "Strand")
+  FuelOptimizationStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: statemachine.asl.json
+      DefinitionSubstitutions:
+        IngestionLambdaArn: !GetAtt IngestionFunction.Arn
+        OptimizationLambdaArn: !GetAtt OptimizationFunction.Arn
+        ReportingLambdaArn: !GetAtt ReportingFunction.Arn
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref IngestionFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref OptimizationFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ReportingFunction
