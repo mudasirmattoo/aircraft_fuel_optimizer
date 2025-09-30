@@ -7,12 +7,13 @@ This project is a proof-of-concept agent that analyzes a flight plan, fetches li
 ## Core Technologies
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![AWS Strands SDK](https://img.shields.io/badge/AWS%20Strands%20SDK-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![AWS Lambda](https://img.shields.io/badge/AWS%20Lambda-FF9900?style=for-the-badge&logo=aws-lambda&logoColor=white)
 ![AWS Step Functions](https://img.shields.io/badge/AWS%20Step%20Functions-9146B6?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![Amazon SQS](https://img.shields.io/badge/Amazon%20SQS-FF4F8B?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 
 ---
+
 
 ## Project Structure and Execution Modes
 
