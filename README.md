@@ -4,6 +4,16 @@ This project is a proof-of-concept agent that analyzes a flight plan, fetches li
 
 ---
 
+## Core Technologies
+
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![AWS Lambda](https://img.shields.io/badge/AWS%20Lambda-FF9900?style=for-the-badge&logo=aws-lambda&logoColor=white)
+![AWS Step Functions](https://img.shields.io/badge/AWS%20Step%20Functions-9146B6?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Amazon SQS](https://img.shields.io/badge/Amazon%20SQS-FF4F8B?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+
+---
+
 ## Project Structure and Execution Modes
 
 - The core logic is implemented inside the `tools/` directory with separate Python modules:
@@ -22,16 +32,6 @@ This project is a proof-of-concept agent that analyzes a flight plan, fetches li
 
 ---
 
-## Core Technologies
-
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![AWS Lambda](https://img.shields.io/badge/AWS%20Lambda-FF9900?style=for-the-badge&logo=aws-lambda&logoColor=white)
-![AWS Step Functions](https://img.shields.io/badge/AWS%20Step%20Functions-9146B6?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![Amazon SQS](https://img.shields.io/badge/Amazon%20SQS-FF4F8B?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
-
----
-
 ## Workflow Overview
 
 1.  **Local Execution:**
@@ -47,7 +47,7 @@ This project is a proof-of-concept agent that analyzes a flight plan, fetches li
 
 1.  **Clone the repo:**
     ```bash
-    git clone [https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git](https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git)
+    git clone https://github.com/mudasirmattoo/aircraft_fuel_optimizer.git
     cd aircraft_fuel_optimizer
     ```
 2.  **Install dependencies:**
@@ -96,7 +96,6 @@ Here is a screenshot of a successful workflow execution in AWS Step Functions:
 Here is the final recommendation message in the AWS SQS queue:
 
 <img width="1870" height="918" alt="image" src="https://github.com/user-attachments/assets/2718491f-5394-488f-bf16-12727b3fdecb" />
-
 
 
 ---
