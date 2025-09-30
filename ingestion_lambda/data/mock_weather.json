@@ -1,0 +1,14 @@
+{
+  "WAYPOINT_A": {
+    "wind_direction": 270,
+    "wind_speed_knots": 80
+  },
+  "WAYPOINT_B": {
+    "wind_direction": 280,
+    "wind_speed_knots": 95
+  },
+  "WAYPOINT_C": {
+    "wind_direction": 290,
+    "wind_speed_knots": 105
+  }
+}

@@ -1,0 +1,4 @@
+aircraft_type,altitude_ft,fuel_burn_rate_kg_per_min
+B737,10000,45
+B737,35000,38
+B737,37000,35
