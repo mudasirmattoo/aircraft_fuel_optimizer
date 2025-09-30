@@ -87,6 +87,9 @@ Follow the manual or SAM deployment instructions below:
 
 ## Demo Screenshots
 
+Local Strands Agent screenshot:
+<img width="1716" height="951" alt="cli output" src="https://github.com/user-attachments/assets/190d29c5-a4ac-4dde-8fff-922ef9c410c6" />
+
 Here is a screenshot of a successful workflow execution in AWS Step Functions:
 
 <img width="1848" height="880" alt="image" src="https://github.com/user-attachments/assets/1930d4ab-cb4f-47b8-88f3-3aca1a0bec37" />
