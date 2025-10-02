@@ -18,7 +18,8 @@ This project is a proof-of-concept agent that analyzes a flight plan, fetches li
 ## Project Structure and Execution Modes
 
 - The core logic is implemented inside the `tools/` directory with separate Python modules:
-  - `ingestion.py` for loading flight plans and fetching weather.
+  - `ingestion.py` for loading flight plans .
+  - `mcp_server.py` for getting weather details from  CheckWX API.
   - `optimization.py` for altitude optimization.
   - `reporting.py` for generating reports.
 - The orchestration for local development runs through two scripts at the top level:
@@ -37,6 +38,7 @@ This project is a proof-of-concept agent that analyzes a flight plan, fetches li
 
 1.  **Local Execution:**
     Run `main.py` that leverages `agent.py` to execute the ingestion, optimization, and reporting with live weather fetch using the AWS Bedrock SDK locally. This produces output and logs locally, validated with screenshots.
+
 2.  **AWS Deployment:**
     - Deploy Lambda functions for ingestion, optimization, reporting, and MCP weather fetch to AWS.
     - Use AWS Step Functions to orchestrate these Lambdas in a state machine for the fuel optimization workflow.
@@ -63,7 +65,82 @@ This project is a proof-of-concept agent that analyzes a flight plan, fetches li
     ```bash
     python main.py
     ```
+5. **Also check if you are getting weather details:**
+    ```bash
+    python mcp_client.py
+    ```
+```bash
+(env) mudasirmattoo@fedora:~/Desktop/airline_fuel_opt$ python mcp_client.py 
+Connecting to MCP server...
+Available MCP Tools: ['<strands.tools.mcp.mcp_agent_tool.MCPAgentTool object at 0x7f799792bcb0>']
+Calling get_aviation_weather...
+I'll get the aviation weather information for VIDP (Indira Gandhi International Airport, Delhi).
+Tool #1: get_aviation_weather
+Here's the current aviation weather (METAR) for VIDP (Indira Gandhi International Airport, Delhi):
 
+**METAR VIDP 021400Z 30004KT 2800 -TSRA SCT030 FEW035CB OVC080 26/25 Q1009 TEMPO 05010G20KT 1500 TSRA**
+
+**Key Weather Information:**
+- **Temperature:** 26°C
+- **Wind:** From 300° at 7 km/h (4 knots)
+- **Visibility:** 2,800 meters
+- **Weather:** Light thunderstorms with rain (-TSRA)
+- **Clouds:** 
+  - Scattered clouds at 3,000 feet
+  - Few cumulonimbus clouds at 3,500 feet
+  - Overcast at 8,000 feet
+- **Pressure:** 1009 hPa
+- **Dew Point:** 25°C
+
+**Temporary Conditions Expected:**
+- Wind shifting to 050° at 19 km/h with gusts up to 37 km/h
+- Visibility reducing to 1,500 meters
+- Thunderstorms with rain continuing
+
+The airport is currently experiencing active thunderstorm conditions with reduced visibility, which could impact flight operations.Weather response: Here's the current aviation weather (METAR) for VIDP (Indira Gandhi International Airport, Delhi):
+
+**METAR VIDP 021400Z 30004KT 2800 -TSRA SCT030 FEW035CB OVC080 26/25 Q1009 TEMPO 05010G20KT 1500 TSRA**
+
+**Key Weather Information:**
+- **Temperature:** 26°C
+- **Wind:** From 300° at 7 km/h (4 knots)
+- **Visibility:** 2,800 meters
+- **Weather:** Light thunderstorms with rain (-TSRA)
+- **Clouds:** 
+  - Scattered clouds at 3,000 feet
+  - Few cumulonimbus clouds at 3,500 feet
+  - Overcast at 8,000 feet
+- **Pressure:** 1009 hPa
+- **Dew Point:** 25°C
+
+**Temporary Conditions Expected:**
+- Wind shifting to 050° at 19 km/h with gusts up to 37 km/h
+- Visibility reducing to 1,500 meters
+- Thunderstorms with rain continuing
+
+The airport is currently experiencing active thunderstorm conditions with reduced visibility, which could impact flight operations.
+
+Calling get_flight_status...
+I don't have access to a flight status function in my available tools. I can only provide aviation weather information using ICAO airport codes.
+
+To get flight status for AI101, you would need to:
+
+1. Check directly with Air India's website or mobile app
+2. Use flight tracking websites like FlightAware, Flightradar24, or FlightStats
+3. Call Air India customer service
+4. Check departure/arrival boards at the airport
+
+Is there anything else I can help you with regarding aviation weather at specific airports?Flight status response: I don't have access to a flight status function in my available tools. I can only provide aviation weather information using ICAO airport codes.
+
+To get flight status for AI101, you would need to:
+
+1. Check directly with Air India's website or mobile app
+2. Use flight tracking websites like FlightAware, Flightradar24, or FlightStats
+3. Call Air India customer service
+4. Check departure/arrival boards at the airport
+
+Is there anything else I can help you with regarding aviation weather at specific airports?
+```
 ---
 
 ## How to Deploy on AWS
