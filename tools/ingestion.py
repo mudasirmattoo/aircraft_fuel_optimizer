@@ -7,7 +7,6 @@ from strands.tools.mcp.mcp_client import MCPClient
 from mcp.client.sse import sse_client
 
 def parse_weather_info(weather_text: str, icao_code: str) -> dict:
-    """Parse weather information from MCP response and extract key details."""
     if not weather_text or weather_text == "N/A":
         return {"status": "N/A", "summary": "No weather data available"}
     
@@ -101,10 +100,8 @@ def ingest_flight_data(flight_id: str) -> dict:
             
             print(f"Processing waypoint: {waypoint_name} at {altitude_ft}ft, {speed_knots}kts")
             
-            # Find the closest altitude in performance data if exact match not found
             try:
                 if not aircraft_performance.empty and altitude_ft is not None:
-                    # Get the closest altitude in performance data
                     altitude_diff = (aircraft_performance['altitude_ft'] - altitude_ft).abs()
                     closest_idx = altitude_diff.idxmin()
                     waypoint_perf = aircraft_performance.iloc[closest_idx].to_dict()
@@ -116,10 +113,8 @@ def ingest_flight_data(flight_id: str) -> dict:
             
             weather_data = {"status": "N/A", "summary": "No weather data available"}
             
-            # Check if this waypoint has an ICAO code (4 letters, all caps)
             is_icao_code = (len(waypoint_name) == 4 and waypoint_name.isalpha() and waypoint_name.isupper())
             
-            # Fetch weather for ICAO codes (airports) or major waypoints
             if (waypoint_name in [full_flight_data['origin'], full_flight_data['destination']] or is_icao_code) and use_mcp:
                 try:
                     print(f"Fetching weather for {waypoint_name}")
@@ -134,7 +129,6 @@ def ingest_flight_data(flight_id: str) -> dict:
                         if content and len(content) > 0:
                             weather_text = content[0].get("text", "N/A")
                             
-                            # Parse weather information for better display
                             weather_data = parse_weather_info(weather_text, waypoint_name)
                             print(f"Weather retrieved for {waypoint_name}: {weather_data['summary']}")
                         else:
@@ -155,7 +149,6 @@ def ingest_flight_data(flight_id: str) -> dict:
             }
             full_flight_data["route"].append(waypoint_data)
 
-    # Verify we have route data before returning
     if not full_flight_data["route"]:
         raise ValueError(f"No valid route data could be generated for flight {flight_id}")
         
